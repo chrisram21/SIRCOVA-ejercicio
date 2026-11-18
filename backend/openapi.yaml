@@ -6073,6 +6073,33 @@ paths:
         "401": { $ref: "#/components/responses/NoAutenticado" }
         "403": { $ref: "#/components/responses/SinPermiso" }
 
+  /auditoria/bitacora/resumen:
+    get:
+      tags: [Alertas y auditoría]
+      summary: Resumen de la bitácora por módulo y acción
+      description: |
+        Cuenta las filas de la bitácora agrupadas por módulo y acción, con los mismos filtros, el mismo permiso y el
+        mismo alcance de `GET /auditoria/bitacora` (sin `pagina` ni `porPagina`). Los módulos van de más a menos
+        filas y, dentro de cada uno, sus acciones también. Es una consulta: no deja fila en la bitácora.
+      x-permiso: BITACORA_CONSULTAR
+      parameters:
+        - { $ref: "#/components/parameters/BitacoraDesde" }
+        - { $ref: "#/components/parameters/BitacoraHasta" }
+        - { $ref: "#/components/parameters/BitacoraUsuarioId" }
+        - { $ref: "#/components/parameters/BitacoraModulo" }
+        - { $ref: "#/components/parameters/BitacoraAccion" }
+        - { $ref: "#/components/parameters/BitacoraEntidad" }
+        - { $ref: "#/components/parameters/BitacoraEntidadId" }
+      responses:
+        "200":
+          description: El conteo por módulo y acción
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ResumenBitacora" }
+        "400": { $ref: "#/components/responses/BitacoraEntradaInvalida" }
+        "401": { $ref: "#/components/responses/NoAutenticado" }
+        "403": { $ref: "#/components/responses/SinPermiso" }
+
   /auditoria/bitacora/excel:
     get:
       tags: [Alertas y auditoría]
@@ -10466,6 +10493,29 @@ components:
               minimum: 0
               description: Filas `LOGIN_FALLIDO`, `CUENTA_BLOQUEADA` y `ACCESO_DENEGADO`
               example: 5
+
+    ResumenBitacora:
+      type: object
+      description: Respuesta de `GET /auditoria/bitacora/resumen`
+      required: [total, modulos]
+      properties:
+        total: { type: integer, description: Filas que cumplen los filtros }
+        modulos:
+          type: array
+          items:
+            type: object
+            required: [modulo, total, acciones]
+            properties:
+              modulo: { type: string, example: USUARIOS }
+              total: { type: integer }
+              acciones:
+                type: array
+                items:
+                  type: object
+                  required: [accion, total]
+                  properties:
+                    accion: { type: string, example: LOGIN_OK }
+                    total: { type: integer }
 
     OpcionesBitacora:
       type: object

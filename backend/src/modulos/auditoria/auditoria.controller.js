@@ -9,6 +9,10 @@ export async function opcionesBitacora(req, res) {
   res.json(await bitacoraService.opcionesBitacora(req.usuario, req.query));
 }
 
+export async function resumenBitacora(req, res) {
+  res.json(await bitacoraService.resumenBitacora(req.usuario, req.query));
+}
+
 export async function bitacoraEnExcel(req, res) {
   const { bytes, nombre } = await bitacoraService.exportarBitacora(req.usuario, req.query, contextoAuditoria(req));
   res.attachment(nombre);

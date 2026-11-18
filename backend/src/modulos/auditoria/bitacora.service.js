@@ -210,6 +210,31 @@ export async function listarBitacora(usuario, query) {
   };
 }
 
+export async function resumenBitacora(usuario, query) {
+  const filtros = leerFiltros(query, { paginado: false });
+  const { condicion, valores } = filtroDeBitacora(usuario, filtros);
+
+  const [filas] = await pool.query(
+    `SELECT b.modulo, b.accion, COUNT(*) AS total
+       FROM bitacora b
+      WHERE ${condicion}
+      GROUP BY b.modulo, b.accion`,
+    valores,
+  );
+
+  const porModulo = new Map();
+  for (const f of filas) {
+    const modulo = porModulo.get(f.modulo) ?? { modulo: f.modulo, total: 0, acciones: [] };
+    modulo.total += Number(f.total);
+    modulo.acciones.push({ accion: f.accion, total: Number(f.total) });
+    porModulo.set(f.modulo, modulo);
+  }
+  const modulos = [...porModulo.values()].sort((a, b) => b.total - a.total);
+  for (const m of modulos) m.acciones.sort((a, b) => b.total - a.total);
+
+  return { total: modulos.reduce((suma, m) => suma + m.total, 0), modulos };
+}
+
 export const TOPE_EXCEL = 10000;
 const formatoEntero = new Intl.NumberFormat('es-GT');
 
