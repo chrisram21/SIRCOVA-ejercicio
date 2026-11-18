@@ -63,7 +63,7 @@ export function contextoAuditoria(req) {
 
 const COLUMNAS_BITACORA = `bitacora
        (usuario_id, nombre_usuario_intento, modulo, accion, entidad, entidad_id,
-        valores_anteriores, valores_nuevos, ip_origen, agente_usuario)`;
+        valores_anteriores, valores_nuevos, ip_origen, agente_usuario, tokens_consumidos)`;
 
 function filaDeBitacora(datos) {
   if (!Object.hasOwn(MODULOS, datos.modulo ?? '')) throw new Error(`Módulo de bitácora desconocido: ${datos.modulo}`);
@@ -80,13 +80,14 @@ function filaDeBitacora(datos) {
     aJson(datos.valoresNuevos),
     recortar(datos.ipOrigen, 45),
     recortar(datos.agenteUsuario, 255),
+    datos.tokensConsumidos ?? null,
   ];
 }
 
 // Recibe la conexión de la transacción en curso para que la fila se confirme o se revierta junto con el cambio.
 export async function registrarBitacora(conexion, datos) {
   await conexion.query(
-    `INSERT INTO ${COLUMNAS_BITACORA} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO ${COLUMNAS_BITACORA} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     filaDeBitacora(datos),
   );
 }

@@ -109,7 +109,7 @@ export function filtroDeBitacora(usuario, filtros) {
 
 export const COLUMNAS_REGISTRO = `b.id, UNIX_TIMESTAMP(b.fecha) AS fecha, b.usuario_id, b.nombre_usuario_intento,
        b.modulo, b.accion, b.entidad, b.entidad_id, b.valores_anteriores, b.valores_nuevos, b.ip_origen,
-       b.agente_usuario, u.nombre_usuario, CONCAT(e.nombres, ' ', e.apellidos) AS nombre_empleado,
+       b.agente_usuario, b.tokens_consumidos, u.nombre_usuario, CONCAT(e.nombres, ' ', e.apellidos) AS nombre_empleado,
        r.codigo AS rol_codigo, r.nombre AS rol_nombre`;
 
 export const UNIONES_REGISTRO = `LEFT JOIN usuario u ON u.id = b.usuario_id
@@ -138,6 +138,7 @@ export function aRegistro(f) {
     valoresNuevos: f.valores_nuevos,
     ipOrigen: f.ip_origen,
     agenteUsuario: f.agente_usuario,
+    tokensConsumidos: f.tokens_consumidos,
   };
 }
 
