@@ -5,7 +5,6 @@ const obligatorias = [
   'MYSQL_HOST',
   'MYSQL_PORT',
   'MYSQL_USER',
-  'MYSQL_PASSWORD',
   'MYSQL_DATABASE',
   'MONGO_URI',
   'MONGO_DB',
