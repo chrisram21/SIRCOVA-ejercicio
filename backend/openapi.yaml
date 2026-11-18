@@ -57,6 +57,7 @@ tags:
   - name: Indicadores
   - name: Informes
   - name: Alertas y auditoría
+  - name: Asistente
 
 security:
   - bearerAuth: []
@@ -6010,6 +6011,39 @@ paths:
               example:
                 error: { codigo: ALERTA_NO_ACTIVA, mensaje: La alerta ya no está activa. }
 
+  /asistente/preguntar:
+    post:
+      tags: [Asistente]
+      summary: Preguntar al asistente (RAG sobre los documentos ingeridos)
+      description: |
+        Busca los 4 fragmentos más parecidos a la pregunta entre los documentos ingeridos (embeddings de Ollama,
+        similitud coseno), se los pasa al modelo de chat de Ollama y devuelve la respuesta con las fuentes
+        que citó. Cada pregunta deja una fila `CONSULTAR_ASISTENTE` del módulo `SISTEMA` en la bitácora, con los
+        tokens consumidos (entrada + salida) en `tokens_consumidos`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [pregunta]
+              properties:
+                pregunta: { type: string, minLength: 3, maxLength: 500, example: "¿Cuáles son los estados del reporte?" }
+      responses:
+        "200":
+          description: La respuesta y sus fuentes
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RespuestaAsistente" }
+        "400": { $ref: "#/components/responses/EntradaInvalida" }
+        "401": { $ref: "#/components/responses/NoAutenticado" }
+        "503":
+          description: Ollama no responde
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+
   /auditoria/bitacora:
     get:
       tags: [Alertas y auditoría]
@@ -10467,6 +10501,37 @@ components:
               minimum: 0
               description: Filas `LOGIN_FALLIDO`, `CUENTA_BLOQUEADA` y `ACCESO_DENEGADO`
               example: 5
+
+    RespuestaAsistente:
+      type: object
+      required: [pregunta, respuesta, fuentes, fragmentosConsultados, tokens]
+      properties:
+        pregunta: { type: string }
+        respuesta: { type: string }
+        fuentes:
+          type: array
+          description: Documentos que el modelo citó; solo puede citar los que recibió
+          items:
+            type: object
+            properties:
+              documento: { type: string, example: guia-soporte-tecnico.md }
+              fragmentos: { type: array, items: { type: integer }, description: Posición de sus fragmentos consultados }
+              similitud: { type: number, description: La mayor similitud de sus fragmentos }
+        fragmentosConsultados:
+          type: array
+          description: Los fragmentos que recibió el modelo, citados o no
+          items:
+            type: object
+            properties:
+              documento: { type: string }
+              fragmento: { type: integer }
+              similitud: { type: number }
+        tokens:
+          type: object
+          properties:
+            entrada: { type: integer }
+            salida: { type: integer }
+            total: { type: integer }
 
     OpcionesBitacora:
       type: object

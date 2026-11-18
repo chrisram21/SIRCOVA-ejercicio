@@ -52,6 +52,12 @@ export default {
     uri: process.env.MONGO_URI,
     baseDatos: process.env.MONGO_DB,
   },
+  ollama: {
+    url: process.env.OLLAMA_URL ?? 'http://localhost:11434',
+    modeloChat: process.env.OLLAMA_MODELO_CHAT ?? 'llama3.2:3b',
+    modeloEmbeddings: process.env.OLLAMA_MODELO_EMBEDDINGS ?? 'bge-m3',
+  },
+  rutaDocumentosRag: path.join(raizBackend, 'rag', 'documentos'),
   jwt: {
     secreto: process.env.JWT_SECRET,
     expiracion: process.env.JWT_EXPIRACION,
