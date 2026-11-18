@@ -20,12 +20,6 @@ router.get(
   indicadoresController.resultadosVigentes,
 );
 router.get(
-  '/indicadores/resultados/excel',
-  autenticar,
-  requierePermiso('INDICADOR_CONSULTAR'),
-  indicadoresController.resultadosEnExcel,
-);
-router.get(
   '/indicadores/serie',
   autenticar,
   requierePermiso('INDICADOR_CONSULTAR'),
@@ -48,12 +42,6 @@ router.get(
   autenticar,
   requierePermiso('INDICADOR_CONSULTAR'),
   indicadoresController.produccionPorFila,
-);
-router.get(
-  '/indicadores/produccion/excel',
-  autenticar,
-  requierePermiso('INDICADOR_CONSULTAR'),
-  indicadoresController.produccionEnExcel,
 );
 
 export default router;
