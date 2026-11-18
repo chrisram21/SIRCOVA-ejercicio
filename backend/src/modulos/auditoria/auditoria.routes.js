@@ -9,6 +9,7 @@ const consultar = [autenticar, requierePermiso('BITACORA_CONSULTAR')];
 
 router.get('/auditoria/bitacora', ...consultar, auditoriaController.listarBitacora);
 router.get('/auditoria/bitacora/opciones', ...consultar, auditoriaController.opcionesBitacora);
+router.get('/auditoria/bitacora/resumen', ...consultar, auditoriaController.resumenBitacora);
 router.get('/auditoria/bitacora/excel', ...consultar, auditoriaController.bitacoraEnExcel);
 
 export default router;
