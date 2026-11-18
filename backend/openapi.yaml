@@ -10435,6 +10435,7 @@ components:
           example: { estado: APROBADO }
         ipOrigen: { type: string, nullable: true, example: 10.0.0.21 }
         agenteUsuario: { type: string, nullable: true, example: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
+        tokensConsumidos: { type: integer, nullable: true, description: Tokens del modelo de lenguaje que usó la acción (entrada + salida); null si no usó ninguno }
 
     PaginaBitacora:
       type: object
