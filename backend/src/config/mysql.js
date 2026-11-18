@@ -8,7 +8,8 @@ const pool = mysql.createPool({
   user: entorno.mysql.usuario,
   password: entorno.mysql.contrasena,
   database: entorno.mysql.baseDatos,
-  ssl: { ca: fs.readFileSync(entorno.mysql.rutaCertificado) },
+  // Sin MYSQL_SSL_CA (base local) la conexión va sin SSL.
+  ssl: entorno.mysql.rutaCertificado ? { ca: fs.readFileSync(entorno.mysql.rutaCertificado) } : undefined,
   connectTimeout: 5000,
   connectionLimit: 10,
 });

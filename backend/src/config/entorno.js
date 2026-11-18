@@ -7,7 +7,6 @@ const obligatorias = [
   'MYSQL_USER',
   'MYSQL_PASSWORD',
   'MYSQL_DATABASE',
-  'MYSQL_SSL_CA',
   'MONGO_URI',
   'MONGO_DB',
   'CORS_ORIGEN',
@@ -48,7 +47,7 @@ export default {
     contrasena: process.env.MYSQL_PASSWORD,
     baseDatos: process.env.MYSQL_DATABASE,
     // Relativa a backend/, para que no dependa de la carpeta desde donde se arranca.
-    rutaCertificado: path.resolve(raizBackend, process.env.MYSQL_SSL_CA),
+    rutaCertificado: process.env.MYSQL_SSL_CA ? path.resolve(raizBackend, process.env.MYSQL_SSL_CA) : null,
   },
   mongo: {
     uri: process.env.MONGO_URI,
