@@ -25,6 +25,7 @@ export const ETIQUETAS_ACCION = {
   CAMBIO_ESTADO: 'Cambio de estado',
   PUBLICAR_ESQUEMA: 'Publicación de esquema',
   EXPORTAR: 'Exportación',
+  CONSULTAR_ASISTENTE: 'Consulta al asistente',
   ACCESO_DENEGADO: 'Acceso denegado',
   CAMBIO_CONTRASENA: 'Cambio de contraseña',
   DESBLOQUEAR: 'Desbloqueo de cuenta',
